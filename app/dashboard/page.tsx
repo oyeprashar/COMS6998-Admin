@@ -112,12 +112,19 @@ export default async function Dashboard() {
                 </header>
 
                 {/* Navigation */}
-                <nav className="mb-8">
+                <nav className="mb-8 flex flex-wrap gap-4">
                     <Link
                         href="/dashboard/users"
-                        className="inline-block rounded-lg border border-purple-500 px-5 py-3 text-purple-400 hover:bg-purple-950"
+                        className="rounded-lg border border-purple-500 px-5 py-3 text-purple-400 hover:bg-purple-950"
                     >
                         Manage Users →
+                    </Link>
+
+                    <Link
+                        href="/dashboard/media"
+                        className="rounded-lg border border-purple-500 px-5 py-3 text-purple-400 hover:bg-purple-950"
+                    >
+                        Manage Media →
                     </Link>
                 </nav>
 
