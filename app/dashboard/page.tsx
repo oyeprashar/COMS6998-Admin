@@ -25,7 +25,7 @@ export default async function Dashboard() {
 
     const supabase = await createClient();
 
-    // Check whether the user is logged in.
+    // Verify authentication.
     const { data: userData, error: userError } =
         await supabase.auth.getUser();
 
@@ -33,7 +33,7 @@ export default async function Dashboard() {
         redirect("/");
     }
 
-    // Check whether the user is a superadmin.
+    // Verify superadmin privileges.
     const { data: isAdmin, error: adminError } =
         await supabase.rpc("is_superadmin");
 
@@ -111,7 +111,7 @@ export default async function Dashboard() {
                     </form>
                 </header>
 
-                {/* Navigation */}
+                {/* Admin Navigation */}
                 <nav className="mb-8 flex flex-wrap gap-4">
                     <Link
                         href="/dashboard/users"
@@ -125,6 +125,13 @@ export default async function Dashboard() {
                         className="rounded-lg border border-purple-500 px-5 py-3 text-purple-400 hover:bg-purple-950"
                     >
                         Manage Media →
+                    </Link>
+
+                    <Link
+                        href="/dashboard/votes"
+                        className="rounded-lg border border-purple-500 px-5 py-3 text-purple-400 hover:bg-purple-950"
+                    >
+                        View Votes →
                     </Link>
                 </nav>
 
@@ -149,6 +156,7 @@ export default async function Dashboard() {
                 {/* Voting and Content Statistics */}
                 <section className="mb-10 grid grid-cols-1 gap-6 lg:grid-cols-2">
 
+                    {/* Community Voting */}
                     <div className="rounded-xl border border-gray-800 bg-zinc-950 p-6">
                         <h2 className="mb-6 text-xl font-semibold">
                             Community Voting
@@ -185,6 +193,7 @@ export default async function Dashboard() {
                         </p>
                     </div>
 
+                    {/* Content Statistics */}
                     <div className="rounded-xl border border-gray-800 bg-zinc-950 p-6">
                         <h2 className="mb-6 text-xl font-semibold">
                             Content Statistics
