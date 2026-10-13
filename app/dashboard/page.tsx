@@ -1,8 +1,9 @@
 
+import { connection } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { logout } from "@/app/logout/actions";
-import { connection } from "next/server";
+import Link from "next/link";
 
 type Caption = {
     text: string;
@@ -20,8 +21,11 @@ type DashboardStats = {
 };
 
 export default async function Dashboard() {
+    await connection();
+
     const supabase = await createClient();
 
+    // Check whether the user is logged in.
     const { data: userData, error: userError } =
         await supabase.auth.getUser();
 
@@ -29,6 +33,7 @@ export default async function Dashboard() {
         redirect("/");
     }
 
+    // Check whether the user is a superadmin.
     const { data: isAdmin, error: adminError } =
         await supabase.rpc("is_superadmin");
 
@@ -36,19 +41,22 @@ export default async function Dashboard() {
         redirect("/unauthorized");
     }
 
+    // Fetch dashboard statistics.
     const { data, error } = await supabase.rpc(
         "admin_dashboard_stats"
     );
 
     if (error || !data) {
         console.error("Dashboard statistics error:", error);
+
         return (
             <main className="min-h-screen bg-black p-10 text-white">
                 <h1 className="text-3xl font-bold">
                     Unable to load dashboard statistics
                 </h1>
+
                 <p className="mt-4 text-gray-400">
-                    Please check the Supabase function and try again.
+                    Please check Supabase and try again.
                 </p>
             </main>
         );
@@ -77,7 +85,8 @@ export default async function Dashboard() {
         <main className="min-h-screen bg-black p-8 text-white md:p-12">
             <div className="mx-auto max-w-6xl">
 
-                <header className="mb-10 flex flex-wrap items-center justify-between gap-4">
+                {/* Header */}
+                <header className="mb-8 flex flex-wrap items-center justify-between gap-4">
                     <div>
                         <p className="text-sm uppercase tracking-widest text-purple-400">
                             Caption Battle
@@ -102,6 +111,17 @@ export default async function Dashboard() {
                     </form>
                 </header>
 
+                {/* Navigation */}
+                <nav className="mb-8">
+                    <Link
+                        href="/dashboard/users"
+                        className="inline-block rounded-lg border border-purple-500 px-5 py-3 text-purple-400 hover:bg-purple-950"
+                    >
+                        Manage Users →
+                    </Link>
+                </nav>
+
+                {/* Statistics Cards */}
                 <section className="mb-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
                     {cards.map((card) => (
                         <div
@@ -119,6 +139,7 @@ export default async function Dashboard() {
                     ))}
                 </section>
 
+                {/* Voting and Content Statistics */}
                 <section className="mb-10 grid grid-cols-1 gap-6 lg:grid-cols-2">
 
                     <div className="rounded-xl border border-gray-800 bg-zinc-950 p-6">
@@ -130,6 +151,7 @@ export default async function Dashboard() {
                             <span className="text-green-400">
                                 Upvotes: {stats.upvotes}
                             </span>
+
                             <span className="text-red-400">
                                 Downvotes: {stats.downvotes}
                             </span>
@@ -142,6 +164,7 @@ export default async function Dashboard() {
                                     width: `${positivePercentage}%`,
                                 }}
                             />
+
                             <div
                                 className="bg-red-500"
                                 style={{
@@ -170,6 +193,7 @@ export default async function Dashboard() {
                     </div>
                 </section>
 
+                {/* Top Captions */}
                 <section className="rounded-xl border border-gray-800 bg-zinc-950 p-6">
                     <h2 className="mb-6 text-xl font-semibold">
                         Top 5 Captions
@@ -190,6 +214,7 @@ export default async function Dashboard() {
                                         <span className="font-bold text-purple-400">
                                             #{index + 1}
                                         </span>
+
                                         <p>{caption.text}</p>
                                     </div>
 
@@ -201,7 +226,6 @@ export default async function Dashboard() {
                         </div>
                     )}
                 </section>
-
             </div>
         </main>
     );
