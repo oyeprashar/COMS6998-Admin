@@ -5,9 +5,10 @@ import { createTerm, updateTerm, deleteTerm } from "./actions";
 
 type Term = { id: string; term: string; description: string | null; is_active: boolean };
 
-export default async function TermsPage() {
+export default async function TermsPage({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
   await connection();
   const supabase = await requireAdmin();
+  const { error: formError } = await searchParams;
   const { data, error } = await supabase.from("terms").select("id,term,description,is_active").order("term");
   const terms = (data ?? []) as Term[];
   return (
@@ -16,6 +17,13 @@ export default async function TermsPage() {
         <Link href="/dashboard" className="text-purple-400 hover:underline">← Back to Dashboard</Link>
         <h1 className="mt-6 text-4xl font-bold">Terms Management</h1>
         <p className="mt-3 text-gray-400">Create, view, edit, activate, and delete terms.</p>
+        {formError && (
+          <p role="alert" className="mt-5 rounded-lg border border-red-800 bg-red-950/40 p-4 text-red-300">
+            {formError === "duplicate" ? "A term with this name already exists. Choose a different name." :
+             formError === "not_found" ? "That term could not be found. Refresh and try again." :
+             "Unable to save your change. Please try again."}
+          </p>
+        )}
         {error ? <p role="alert" className="mt-6 text-red-400">Unable to load terms: {error.message}</p> :
           <>
             <section className="mt-8 rounded-xl border border-gray-800 bg-zinc-950 p-6">
