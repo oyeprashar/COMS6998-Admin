@@ -17,9 +17,9 @@ function idFrom(formData: FormData) {
   if (typeof id !== "string" || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) throw new Error("Invalid term ID");
   return id;
 }
-function finish() {
+function finish(status: "created" | "updated" | "deleted") {
   revalidatePath("/dashboard/terms");
-  redirect("/dashboard/terms");
+  redirect(`/dashboard/terms?success=${status}`);
 }
 export async function createTerm(formData: FormData) {
   const supabase = await requireAdminAction();
@@ -28,7 +28,7 @@ export async function createTerm(formData: FormData) {
     if (error.code === "23505") redirect("/dashboard/terms?error=duplicate");
     redirect("/dashboard/terms?error=save");
   }
-  finish();
+  finish("created");
 }
 export async function updateTerm(formData: FormData) {
   const supabase = await requireAdminAction();
@@ -39,13 +39,13 @@ export async function updateTerm(formData: FormData) {
     redirect("/dashboard/terms?error=save");
   }
   if (!data?.length) redirect("/dashboard/terms?error=not_found");
-  finish();
+  finish("updated");
 }
 export async function deleteTerm(formData: FormData) {
   const supabase = await requireAdminAction();
   const id = idFrom(formData);
   const { data, error } = await supabase.from("terms").delete().eq("id", id).select("id");
-  if (error) throw new Error(error.message);
-  if (!data?.length) throw new Error("Term not found");
-  finish();
+  if (error) redirect("/dashboard/terms?error=save");
+  if (!data?.length) redirect("/dashboard/terms?error=not_found");
+  finish("deleted");
 }
