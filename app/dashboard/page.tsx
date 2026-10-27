@@ -154,6 +154,7 @@ export default async function Dashboard() {
                     </Link>
                     <Link href="/dashboard/llm-providers" className="rounded-lg border border-purple-500 px-5 py-3 text-purple-400 hover:bg-purple-950">Manage LLM Providers →</Link>
                     <Link href="/dashboard/llm-models" className="rounded-lg border border-purple-500 px-5 py-3 text-purple-400 hover:bg-purple-950">Manage LLM Models →</Link>
+                    <Link href="/dashboard/ai-generation-examples" className="rounded-lg border border-purple-500 px-5 py-3 text-purple-400 hover:bg-purple-950">Manage AI Generation Examples →</Link>
                 </nav>
 
                 {/* Statistics Cards */}
