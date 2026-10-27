@@ -1,3 +1,4 @@
+import { connection } from "next/server";
 import Link from "next/link";
 import { requireAdmin } from "@/lib/admin";
 import { savePromptChainWeight } from "./actions";
@@ -6,6 +7,7 @@ type Chain = { id: string; name: string; is_active: boolean };
 type Mix = { prompt_chain_id: string; weight: number };
 
 export default async function PromptChainMixPage() {
+  await connection();
   const supabase = await requireAdmin();
   const [chainResult, mixResult] = await Promise.all([
     supabase.from("prompt_chains").select("id,name,is_active").order("name"),
