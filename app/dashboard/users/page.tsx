@@ -26,7 +26,7 @@ export default async function UsersPage() {
     }
 
     const { data: isAdmin, error: adminError } =
-        await supabase.rpc("is_superadmin");
+        await supabase.rpc("is_admin_member");
 
     if (adminError || isAdmin !== true) {
         redirect("/unauthorized");
