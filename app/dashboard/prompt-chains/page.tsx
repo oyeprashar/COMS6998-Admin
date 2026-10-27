@@ -1,3 +1,4 @@
+import { connection } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
@@ -19,6 +20,7 @@ type PromptChainStep = {
 };
 
 export default async function PromptChainsPage() {
+  await connection();
   const supabase = await createClient();
   const { data: authData, error: authError } = await supabase.auth.getUser();
   if (authError || !authData.user) redirect("/");
