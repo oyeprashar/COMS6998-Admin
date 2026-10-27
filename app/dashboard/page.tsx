@@ -159,7 +159,7 @@ export default async function Dashboard() {
                     <Link href="/dashboard/llm-responses" className="rounded-lg border border-purple-500 px-5 py-3 text-purple-400 hover:bg-purple-950">View LLM Responses →</Link>
                     <Link href="/dashboard/ai-generated-media" className="rounded-lg border border-purple-500 px-5 py-3 text-purple-400 hover:bg-purple-950">View AI Generated Media →</Link>
                     <Link href="/dashboard/allowed-signup-domains" className="rounded-lg border border-purple-500 px-5 py-3 text-purple-400 hover:bg-purple-950">Allowed Signup Domains →</Link>
-                    <Link href="/dashboard/whitelisted-email-addresses" className="rounded-lg border border-purple-500 px-5 py-3 text-purple-400 hover:bg-purple-950">Whitelisted Emails →</Link>
+                    {isSuperadmin === true && (<Link href="/dashboard/whitelisted-email-addresses" className="rounded-lg border border-purple-500 px-5 py-3 text-purple-400 hover:bg-purple-950">Whitelisted Emails →</Link>)}
                 </nav>
 
                 {/* Statistics Cards */}
