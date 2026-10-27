@@ -1,5 +1,5 @@
 "use server";
-import { requireSuperadminAction } from "@/lib/admin";
+import { requireAdminAction } from "@/lib/admin";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 const base = "/dashboard/whitelisted-email-addresses";
@@ -19,20 +19,20 @@ function payload(form: FormData) {
 function done(result: string): never { revalidatePath(base); redirect(base + "?success=" + result); }
 function fail(code?:string): never { redirect(base+"?error="+(code==="23505"?"duplicate":"save")); }
 export async function createEntry(form: FormData) {
- const db=await requireSuperadminAction();
+ const db=await requireAdminAction();
  const {error}=await db.from(table).insert(payload(form));
  if(error) fail(error.code);
  done("created");
 }
 export async function updateEntry(form: FormData) {
- const db=await requireSuperadminAction();
+ const db=await requireAdminAction();
  const {data,error}=await db.from(table).update(payload(form)).eq("id",getId(form)).select("id");
  if(error) fail(error.code);
  if(!data?.length) redirect(base+"?error=missing");
  done("updated");
 }
 export async function deleteEntry(form: FormData) {
- const db=await requireSuperadminAction();
+ const db=await requireAdminAction();
  const {data,error}=await db.from(table).delete().eq("id",getId(form)).select("id");
  if(error) fail(error.code);
  if(!data?.length) redirect(base+"?error=missing");
