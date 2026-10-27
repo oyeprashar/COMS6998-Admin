@@ -33,8 +33,10 @@ export default async function Dashboard() {
         redirect("/");
     }
 
-    // Verify superadmin privileges.
+    // Permit superadmins and active whitelisted admin members.
     const { data: isAdmin, error: adminError } =
+        await supabase.rpc("is_admin_member");
+    const { data: isSuperadmin } =
         await supabase.rpc("is_superadmin");
 
     if (adminError || isAdmin !== true) {
