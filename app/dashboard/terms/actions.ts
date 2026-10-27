@@ -24,15 +24,21 @@ function finish() {
 export async function createTerm(formData: FormData) {
   const supabase = await requireAdminAction();
   const { error } = await supabase.from("terms").insert(fields(formData));
-  if (error) throw new Error(error.message);
+  if (error) {
+    if (error.code === "23505") redirect("/dashboard/terms?error=duplicate");
+    redirect("/dashboard/terms?error=save");
+  }
   finish();
 }
 export async function updateTerm(formData: FormData) {
   const supabase = await requireAdminAction();
   const id = idFrom(formData);
   const { data, error } = await supabase.from("terms").update(fields(formData)).eq("id", id).select("id");
-  if (error) throw new Error(error.message);
-  if (!data?.length) throw new Error("Term not found");
+  if (error) {
+    if (error.code === "23505") redirect("/dashboard/terms?error=duplicate");
+    redirect("/dashboard/terms?error=save");
+  }
+  if (!data?.length) redirect("/dashboard/terms?error=not_found");
   finish();
 }
 export async function deleteTerm(formData: FormData) {
