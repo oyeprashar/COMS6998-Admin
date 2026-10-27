@@ -16,7 +16,7 @@ async function requireAdmin() {
     }
 
     const { data: isAdmin, error: adminError } =
-        await supabase.rpc("is_superadmin");
+        await supabase.rpc("is_admin_member");
 
     if (adminError || isAdmin !== true) {
         throw new Error("Administrator access required");
