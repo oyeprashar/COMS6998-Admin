@@ -1,12 +1,12 @@
 import { connection } from "next/server";
 import Link from "next/link";
-import { requireAdmin } from "@/lib/admin";
+import { requireSuperadmin } from "@/lib/admin";
 import SubmitButton from "@/app/dashboard/terms/submit-button";
 import { createEntry, updateEntry, deleteEntry } from "./actions";
 type Entry={ id:string; email:string; is_active:boolean; created_at:string };
 export default async function Page({ searchParams }: { searchParams: Promise<{ error?:string; success?:string }> }) {
  await connection();
- const db=await requireAdmin();
+ const db=await requireSuperadmin();
  const {data,error}=await db.from("whitelisted_email_addresses").select("id,email,is_active,created_at").order("email");
  const entries=(data??[]) as Entry[];
  const status=await searchParams;
