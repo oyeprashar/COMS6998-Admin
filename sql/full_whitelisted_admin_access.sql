@@ -32,12 +32,12 @@ begin
    from pg_proc p
    join pg_namespace ns on ns.oid = p.pronamespace
    where ns.nspname = 'public'
-     and p.proname like 'admin\\_%' escape '\\'
+     and p.proname like 'admin\_%' escape '\'
      and p.prokind = 'f'
  loop
    def := regexp_replace(
      fn.definition,
-     '(public\\.)?is_superadmin[[:space:]]*\\([[:space:]]*\\)',
+     '(public\.)?is_superadmin[[:space:]]*\([[:space:]]*\)',
      'public.is_admin_member()',
      'gi'
    );
