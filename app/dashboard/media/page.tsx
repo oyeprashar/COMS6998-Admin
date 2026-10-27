@@ -17,7 +17,7 @@ export default async function MediaPage() {
 
     // Step 2: Verify the user is a superadmin.
     const { data: isAdmin, error: adminError } =
-        await supabase.rpc("is_superadmin");
+        await supabase.rpc("is_admin_member");
 
     if (adminError || isAdmin !== true) {
         redirect("/unauthorized");
