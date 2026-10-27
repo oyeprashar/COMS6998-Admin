@@ -1,3 +1,4 @@
+import { connection } from "next/server";
 import Link from "next/link";
 import { requireAdmin } from "@/lib/admin";
 import { createTerm, updateTerm, deleteTerm } from "./actions";
@@ -5,6 +6,7 @@ import { createTerm, updateTerm, deleteTerm } from "./actions";
 type Term = { id: string; term: string; description: string | null; is_active: boolean };
 
 export default async function TermsPage() {
+  await connection();
   const supabase = await requireAdmin();
   const { data, error } = await supabase.from("terms").select("id,term,description,is_active").order("term");
   const terms = (data ?? []) as Term[];
