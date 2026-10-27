@@ -36,9 +36,6 @@ export default async function Dashboard() {
     // Permit superadmins and active whitelisted admin members.
     const { data: isAdmin, error: adminError } =
         await supabase.rpc("is_admin_member");
-    const { data: isSuperadmin } =
-        await supabase.rpc("is_superadmin");
-
     if (adminError || isAdmin !== true) {
         redirect("/unauthorized");
     }
@@ -48,7 +45,7 @@ export default async function Dashboard() {
         "admin_dashboard_stats"
     );
 
-    if ((error || !data) && isSuperadmin === true) {
+    if (error || !data) {
         console.error("Dashboard statistics error:", error);
 
         return (
@@ -64,7 +61,7 @@ export default async function Dashboard() {
         );
     }
 
-    const stats = (data ?? { total_users:0,total_images:0,total_captions:0,total_votes:0,upvotes:0,downvotes:0,top_captions:[] }) as DashboardStats;
+    const stats = data as DashboardStats;
 
     const cards = [
         { title: "Total Users", value: stats.total_users },
@@ -111,30 +108,28 @@ export default async function Dashboard() {
                             Logout
                         </button>
                     </form>
-                </header>
-
-                {isSuperadmin !== true && <p className="mb-6 rounded-lg border border-purple-800 p-4 text-purple-300">Whitelisted admin access enabled. Legacy media, users, votes, and statistics require superadmin permissions.</p>}                {/* Admin Navigation */}
+                </header>                {/* Admin Navigation */}
                 <nav className="mb-8 flex flex-wrap gap-4">
-                    {isSuperadmin === true && (<Link
+                    <Link
                         href="/dashboard/users"
                         className="rounded-lg border border-purple-500 px-5 py-3 text-purple-400 hover:bg-purple-950"
                     >
                         Manage Users →
-                    </Link>)}
+                    </Link>
 
-                    {isSuperadmin === true && (<Link
+                    <Link
                         href="/dashboard/media"
                         className="rounded-lg border border-purple-500 px-5 py-3 text-purple-400 hover:bg-purple-950"
                     >
                         Manage Media →
-                    </Link>)}
+                    </Link>
 
-                    {isSuperadmin === true && (<Link
+                    <Link
                         href="/dashboard/votes"
                         className="rounded-lg border border-purple-500 px-5 py-3 text-purple-400 hover:bg-purple-950"
                     >
                         View Votes →
-                    </Link>)}
+                    </Link>
                     <Link
                         href="/dashboard/prompt-chains"
                         className="rounded-lg border border-purple-500 px-5 py-3 text-purple-400 hover:bg-purple-950"
@@ -161,7 +156,7 @@ export default async function Dashboard() {
                     <Link href="/dashboard/llm-responses" className="rounded-lg border border-purple-500 px-5 py-3 text-purple-400 hover:bg-purple-950">View LLM Responses →</Link>
                     <Link href="/dashboard/ai-generated-media" className="rounded-lg border border-purple-500 px-5 py-3 text-purple-400 hover:bg-purple-950">View AI Generated Media →</Link>
                     <Link href="/dashboard/allowed-signup-domains" className="rounded-lg border border-purple-500 px-5 py-3 text-purple-400 hover:bg-purple-950">Allowed Signup Domains →</Link>
-                    {isSuperadmin === true && (<Link href="/dashboard/whitelisted-email-addresses" className="rounded-lg border border-purple-500 px-5 py-3 text-purple-400 hover:bg-purple-950">Whitelisted Emails →</Link>)}
+                    <Link href="/dashboard/whitelisted-email-addresses" className="rounded-lg border border-purple-500 px-5 py-3 text-purple-400 hover:bg-purple-950">Whitelisted Emails →</Link>
                 </nav>
 
                 {/* Statistics Cards */}
