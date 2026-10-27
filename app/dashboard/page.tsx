@@ -139,6 +139,19 @@ export default async function Dashboard() {
                     >
                         View Prompt Chains →
                     </Link>
+                    <Link
+                        href="/dashboard/prompt-chain-mix"
+                        className="rounded-lg border border-purple-500 px-5 py-3 text-purple-400 hover:bg-purple-950"
+                    >
+                        Prompt Chain Mix →
+                    </Link>
+
+                    <Link
+                        href="/dashboard/terms"
+                        className="rounded-lg border border-purple-500 px-5 py-3 text-purple-400 hover:bg-purple-950"
+                    >
+                        Manage Terms →
+                    </Link>
                 </nav>
 
                 {/* Statistics Cards */}
