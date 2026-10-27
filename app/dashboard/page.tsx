@@ -133,6 +133,12 @@ export default async function Dashboard() {
                     >
                         View Votes →
                     </Link>
+                    <Link
+                        href="/dashboard/prompt-chains"
+                        className="rounded-lg border border-purple-500 px-5 py-3 text-purple-400 hover:bg-purple-950"
+                    >
+                        View Prompt Chains →
+                    </Link>
                 </nav>
 
                 {/* Statistics Cards */}
