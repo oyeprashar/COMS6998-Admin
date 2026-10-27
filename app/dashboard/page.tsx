@@ -46,7 +46,7 @@ export default async function Dashboard() {
         "admin_dashboard_stats"
     );
 
-    if (error || !data) {
+    if ((error || !data) && isSuperadmin === true) {
         console.error("Dashboard statistics error:", error);
 
         return (
@@ -62,7 +62,7 @@ export default async function Dashboard() {
         );
     }
 
-    const stats = data as DashboardStats;
+    const stats = (data ?? { total_users:0,total_images:0,total_captions:0,total_votes:0,upvotes:0,downvotes:0,top_captions:[] }) as DashboardStats;
 
     const cards = [
         { title: "Total Users", value: stats.total_users },
@@ -111,7 +111,7 @@ export default async function Dashboard() {
                     </form>
                 </header>
 
-                {/* Admin Navigation */}
+                {isSuperadmin !== true && <p className="mb-6 rounded-lg border border-purple-800 p-4 text-purple-300">Whitelisted admin access enabled. Legacy media, users, votes, and statistics require superadmin permissions.</p>}\n\n                {/* Admin Navigation */}
                 <nav className="mb-8 flex flex-wrap gap-4">
                     <Link
                         href="/dashboard/users"
